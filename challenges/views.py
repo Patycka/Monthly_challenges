@@ -1,28 +1,39 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
+
+monthly_challenges = {
+    "january": "Write plans for new year",
+    "february": "Walk at least 30 minutes per day",
+    'march': "Read book at leat 20 minutes per day",
+    'april': "Walk at least 30 minutes per day",
+    'may': "Reduce weight with 1 kilogram",
+    'june':"Reduce weight with 1 kilogram",
+    'july': "Reduce weight with 1 kilogram",
+    'august': "Go on holiday",
+    'september': "Maintain weight and read book at least 20 minutes per day",
+    'october': "Maintain weight and read book at least 20 minutes per day",
+    'november': "Maintain weight and read book at least 20 minutes per day",
+    'december': "Maintain weight and read book at least 20 minutes per day",
+}
 
 # Create your views here.
 
+'''
+Function changes number of the month written in url to the name of the month.
+Next the view is changed to the view of specific month (monthly_challenge() is called). 
+'''
 def monthly_challenge_by_number(request, month):
-    return HttpResponse(month)
+    months = list(monthly_challenges.keys())
+    if month > len(months):
+        return HttpResponseNotFound("Wrong month")
+    month_name = months[month-1]
+    redirect_path = reverse("month-challenge", args=[month_name])
+    return HttpResponseRedirect(redirect_path)
 
 def monthly_challenge(request, month):
-    challenge_text = None
-
-    if month == 'january':
-        challenge_text = "Write plans for starting year"
-    elif month == 'february':
-        challenge_text = "Walk at least 30 minutes per day"
-    elif month == 'march':
-        challenge_text = "Read book at leat 20 minutes per day"
-    elif month == 'april':
-        challenge_text = "Walk at least 30 minutes per day"
-    elif month in ['may','june', 'july']:
-        challenge_text = "Reduce weight with 1 kilogram"
-    elif month == 'august':
-        challenge_text = "Go on holiday"
-    elif month in ['september', 'october', 'november', 'december']:
-        challenge_text = "Maintain weight and read book at least 20 minutes per day"
-    else:
+    try:
+        challenge_text = monthly_challenges[month]
+    except:
         return HttpResponseNotFound("Wrong month")
     return HttpResponse(challenge_text)
