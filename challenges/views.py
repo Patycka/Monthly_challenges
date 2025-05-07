@@ -34,6 +34,18 @@ def monthly_challenge_by_number(request, month):
 def monthly_challenge(request, month):
     try:
         challenge_text = monthly_challenges[month]
+        response_Data = f"<h1>{challenge_text}</h1>"
     except:
-        return HttpResponseNotFound("Wrong month")
-    return HttpResponse(challenge_text)
+        return HttpResponseNotFound("<h1>Wrong month</h1>")
+    return HttpResponse(response_Data)
+
+'''
+Function shows all challenges as clickable link
+'''
+def show_all_challenges(request):
+    response_data = "<ul>"
+    for month in monthly_challenges.keys():
+        month_path = reverse("month-challenge", args = [month])
+        response_data += f'<li><a href="{month_path}">{month}</a></li>'
+    response_data += '</ul>'
+    return HttpResponse(response_data)
