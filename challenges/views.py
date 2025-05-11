@@ -15,7 +15,7 @@ monthly_challenges = {
     'september': "Maintain weight and read book at least 20 minutes per day",
     'october': "Maintain weight and read book at least 20 minutes per day",
     'november': "Maintain weight and read book at least 20 minutes per day",
-    'december': "Maintain weight and read book at least 20 minutes per day",
+    'december': None,
 }
 
 # Create your views here.
@@ -43,9 +43,5 @@ def monthly_challenge(request, month):
 Function shows all challenges as clickable link
 '''
 def show_all_challenges(request):
-    response_data = "<ul>"
-    for month in monthly_challenges.keys():
-        month_path = reverse("month-challenge", args = [month])
-        response_data += f'<li><a href="{month_path}">{month}</a></li>'
-    response_data += '</ul>'
-    return HttpResponse(response_data)
+    months = list(monthly_challenges.keys())
+    return render(request, 'challenges/index.html', {'months': months})
